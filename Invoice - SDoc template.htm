@@ -1,0 +1,94 @@
+<style type="text/css">body{
+    font-family:times new roman,times,serif;
+}
+.p1{
+   padding:0px 10px;
+}
+.p2{
+   padding:0px 5px;
+   font-size: 11px;
+}
+.bold{
+   font-weight: bold;
+}
+#page{
+    max-height: 620px;
+}
+#main{
+   min-height: 300px;
+   max-height: 320px;
+   overflow: hidden;
+}
+#footer {
+   max-height: 300px;
+}
+</style>
+<div id="page">
+<div>
+<table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
+	<tbody>
+		<tr>
+			<td>
+			<p class="p1"><span style="font-size: 18px;"><strong>{{{!Opportunity.x13d_invoice_address__c}}}</strong></span></p>
+			</td>
+			<td style="text-align: right;"><img alt="" src="/servlet/servlet.ImageServer?id=015G0000015PlIgIAK&amp;oid=00DG0000000iQrLMAU" style="width: 200px; height: 133px;" /></td>
+		</tr>
+		<tr>
+			<td>
+			<p class="p1"><span style="font-size: 16px;">{{{!Opportunity.Invoice_Address__c}}}</span></p>
+			</td>
+			<td style="text-align: right;" valign="top">
+			<table border="0" cellpadding="0" cellspacing="0" style="width: 200px; float: right;">
+				<tbody>
+					<tr>
+						<td style="text-align: left;"><strong><span style="font-size: 16px;">DATE</span></strong></td>
+						<td><span style="font-size: 16px;">{{!Opportunity.due_date__c M/d/yyyy}}</span></td>
+					</tr>
+					<tr>
+						<td style="text-align: left;"><span style="font-size: 16px;"><b>INVOICE #</b></span></td>
+						<td><span style="font-size: 16px;">{{!Opportunity.invoice_number__c}}</span></td>
+					</tr>
+					<tr>
+						<td style="text-align: left;"><span style="font-size: 16px;"><b>TERMS</b></span></td>
+						<td><span style="font-size: 12px;">{{!Opportunity.Invoice_Terms__c}}</span></td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+&nbsp;
+
+<div id="main"><strong><span style="padding-left: 10px; font-size: 18px; margin-top: 10px;">Subscription to 13D Research Service</span></strong>
+
+<p class="p1" style="margin: 0px; border-top-color: black; border-top-width: 2px; border-top-style: solid;"><span class="bold">Subscription Period:&nbsp;</span>{{!Opportunity.subscription_start__c MMMMM d, yyyy}}&nbsp;-&nbsp;{{!Opportunity.Subscription_End__c MMMMM d, yyyy}} <span class="bold" style="float: right;">Total: {{!Opportunity.currencyisocode}}&nbsp;{{!Opportunity.amount #,###.##}}</span></p>
+
+<p class="p1">{{{!Opportunity.Additional_Notes__c}}}</p>
+</div>
+
+<div id="footer">
+<table border="0" cellpadding="2" cellspacing="2" style="width: 100%; border-top-color: black; border-top-width: 1px; border-top-style: solid;">
+	<tbody>
+		<tr>
+			<td valign="top"><span style="font-size: 10px;"><strong>{{!Opportunity.payment_currency__c}} Wire Instructions:</strong></span>
+
+			<p class="p2">{{!Opportunity.wiring_instructions__c}}</p>
+			</td>
+			<td valign="top"><!--RENDER={{!Opportunity.ACH_Instructions__c}} != '' --><span style="font-size: 10px;"><strong>ACH Instructions:</strong></span>
+			<p class="p2">{{!Opportunity.ach_instructions__c}}</p>
+			<!--ENDRENDER--></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="border-top-color: black; border-top-width: 1px; border-top-style: solid;">
+			<p class="p2" style="margin: 0px;">There is a risk in trading markets. We are not Investment Advisors. Our reports are based upon information gathered from various sources believed to be reliable but are not guaranteed as to accuracy or completeness. The information in the report is not intended to be, and shall not constitute, an offer to sell or a solicitation of an offer to buy any security or investment product or service. The information in the report is subject to change without notice, and 13D Research assumes no responsibility to update the information contained in the report. The publisher and/or its individual officers, employees, or members of their families might, from time to time, have a position in the securities mentioned and may purchase or sell these securities in the future. The publisher and/or its individual officers, employees, or members of their families might, from time to time, have financial interests with affiliates of companies whose securities have been discussed in this publication.</p>
+			<!--RENDER={{!Opportunity.Payment_Currency__c}} != 'USD - Domestic' -->
+
+			<p class="p2">13D Research International Limited is registered in the British Virgin Islands, BVI Company Number: 1782925. Registered office is at 263 Main Street, Road Town, Tortola, British Virgin Islands.</p>
+			<!--ENDRENDER--></td>
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>
