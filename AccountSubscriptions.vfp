@@ -1,0 +1,84 @@
+<apex:page Controller="AccountSubsController" tabStyle="Contact_Product__c" sidebar="false">
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"/>
+    <apex:form >
+        <apex:pageBlock title="All Subscriptions for: {!AccountName}">
+            <apex:pageMessages />
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!UpdateSubs}"/>
+                <apex:commandButton value="Cancel" action="{!Cancel}" />
+                <input type="button" class="btn Expire_All_Button" value="Set End Dates to Today" />
+                <!--<apex:commandButton value="Expire Active Subs Today" action="{!expireAllActive}" reRender="Account_Subs_List" />-->
+                <apex:commandButton value="Restore Dates" reRender="Account_Subs_List" />
+                <apex:commandLink style="float:right; margin-left:10px;" value="Show Active Only" action="{!filterByActive}" reRender="Account_Subs_List"/>
+                <apex:commandLink style="float:right;" value="Show All" action="{!clearFilters}" reRender="Account_Subs_List"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!Subscriptions}" var="sub" id="Account_Subs_List">
+                <apex:column headerValue="Subscriber First Name">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{! sortByFirstName }" reRender="Account_Subs_List">First Name</apex:commandLink>
+                    </apex:facet>
+                    <apex:outputLink value="/{!sub.Id}">{!sub.Contact__r.FirstName}</apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Subscriber Last Name">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{! sortByLastName }" reRender="Account_Subs_List">Last Name</apex:commandLink>
+                    </apex:facet>
+                    <apex:outputLink value="/{!sub.Id}">{!sub.Contact__r.LastName}</apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Contact Manager">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{! sortByContactManager }" reRender="Account_Subs_List">Contact Manager</apex:commandLink>
+                    </apex:facet>
+                <apex:outputField value="{!sub.Contact__r.Owner.FirstName}" /></apex:column>
+                <apex:column headerValue="Distribution Email">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{! sortByDistEmail }" reRender="Account_Subs_List">Distribution Email</apex:commandLink>
+                    </apex:facet>
+                    <apex:outputField value="{!sub.Distribution_Email__c}"/>
+                </apex:column>                
+                <apex:column headerValue="Product">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{! sortByProduct }" reRender="Account_Subs_List">Product Name</apex:commandLink>
+                    </apex:facet>
+                    <apex:outputField value="{!sub.Product__r.Name}"/>
+                </apex:column>
+                <apex:column headerValue="Subscription Type">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{! sortBySubscriptionType }" reRender="Account_Subs_List">Subscription Type</apex:commandLink>
+                    </apex:facet>
+                    <apex:outputField value="{!sub.Subscription_Type__c}"/>
+                </apex:column>
+                <apex:column headerValue="Subscription Is">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{! sortBySubscriptionIs }" reRender="Account_Subs_List">Subscription Is</apex:commandLink>
+                    </apex:facet>
+                    <apex:outputField value="{!sub.Subscription_Is__c}"/>
+                </apex:column>
+                <apex:column headerValue="Start Date">
+                    <apex:outputField value="{!sub.Subscription_Start__c}"/>
+                </apex:column>
+                <apex:column headerValue="End Date">
+                    <apex:outputField value="{!sub.Subscription_End__c}" rendered="{! !(sub.Subscription_Is__c='Active')}" />
+                    <apex:inputField value="{!sub.Subscription_End__c}" styleClass="Subscription_End" rendered="{! (sub.Subscription_Is__c='Active')}"/>
+                </apex:column>
+                <apex:column headerValue="Dist Method">
+                    <apex:inputField value="{!sub.Distribution_Method__c}"/>
+                </apex:column>
+                <apex:column headerValue="PDF Type">
+                    <apex:inputField value="{!sub.PDF_Type__c}"/>
+                </apex:column>
+                <apex:column headerValue="Weekly Email">
+                    <apex:inputField value="{!sub.Receive_Weekly_Email__c}"/>
+                </apex:column>
+            </apex:pageBlockTable>      
+        </apex:pageBlock>
+    </apex:form>
+<script>
+$( document ).ready(function() {
+    $( ".Expire_All_Button" ).on('click', (function() {
+        var date = '{! formattedDate }';
+        $(".Subscription_End").val(date);
+    }) );
+});
+</script>
+</apex:page>

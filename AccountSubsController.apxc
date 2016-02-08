@@ -1,0 +1,90 @@
+public class AccountSubsController {
+    private list<Contact_Product__c> Subscriptions;
+    private Id acctID;
+    private String acctName;
+    private string orderBy = 'Name';
+    private string filterBy = '';
+    public date todayDate = Date.Today();
+    
+    public AccountSubsController() 
+    {
+
+    }    
+    
+    public list<Contact_Product__c> getSubscriptions() {
+           acctID = ApexPages.currentPage().getParameters().get('AccountId');
+           Account a = [SELECT Name FROM Account WHERE Id =:acctID];
+           acctName = a.Name; 
+           Subscriptions = Database.query('SELECT Id, Name, Contact__r.FirstName, Contact__r.LastName, Contact__r.Owner.FirstName, Contact__r.Account.Name, Distribution_Email__c, ' +
+           'Subscription_Start__c, Subscription_End__c, Subscription_Type__c, Product__r.Name, Contact__r.Name, Contact__r.Id, ' +
+           'Subscription_Is__c, Distribution_Method__c, PDF_Type__c, Receive_Weekly_Email__c ' +
+           'FROM Contact_Product__c WHERE Contact__r.AccountId =:acctID ' + filterBy + ' ORDER BY ' + orderBy);
+           return Subscriptions;
+    }
+    
+    public string getAccountName(){
+        //return this.Subscriptions[0].Contact__r.Account.Name;
+        return this.acctName;
+    }
+    
+    public PageReference Cancel(){
+        return new PageReference('/'+ acctId);
+    }
+    
+    public PageReference UpdateSubs(){
+        try{
+                update Subscriptions;
+        }
+        catch(DmlException e) {
+                //System.debug('The following exception has occurred: ' + e.getMessage());
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR, e.getMessage()));
+        }
+        return null;
+    }
+    
+    public void sortByFirstName(){
+        this.orderBy = 'Contact__r.FirstName';
+    }
+    public void sortByLastName(){
+        this.orderBy = 'Contact__r.LastName';
+    }
+    public void sortByProduct(){
+        this.orderBy = 'Product__r.Name';
+    }
+    public void sortBySubscriptionType(){
+        this.orderBy = 'Subscription_Type__c';
+    }
+    public void sortBySubscriptionIs(){
+        this.orderBy = 'Subscription_Is__c';
+    }
+    public void sortByContactManager(){
+        this.orderBy = 'Contact__r.Owner.FirstName';
+    }
+    public void sortByDistEmail(){
+        this.orderBy = 'Distribution_Email__c';
+    }
+   
+    
+    public void filterByActive(){
+        this.filterBy = 'AND Subscription_Is__c = \'Active\' ';
+    }
+    public void clearFilters(){
+        this.filterBy = '';
+    }   
+    public string getFormattedDate(){
+        string formattedDate = this.todayDate.Format();
+        return formattedDate;
+    }
+    /*
+    public void expireAllActive(){
+        list<Contact_Product__c> CPs = new List<Contact_Product__c>();
+        for(Contact_Product__c CP: this.Subscriptions){
+            if(CP.Subscription_Is__c == 'Active'){
+                CP.Subscription_End__c = Date.Today();
+            }
+            CPs.add(CP);
+        }
+        this.Subscriptions = CPs;
+    }*/
+
+}
