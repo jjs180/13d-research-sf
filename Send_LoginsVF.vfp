@@ -1,0 +1,118 @@
+<apex:page Controller="AccountContactsController" tabStyle="Contact" sidebar="false">
+<style>
+.rightLinks{
+    float:right;
+    margin-left: 10px;
+}    
+</style>
+<apex:includeScript value="/soap/ajax/20.0/connection.js" />
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"/>
+<script>
+    sforce.connection.sessionId='{!GETSESSIONID()}';
+</script>
+    <apex:form >
+        <apex:pageBlock title="All Contacts of: {!AccountName}">
+            <apex:pageMessages />
+            <apex:pageBlockButtons >
+                <input type="button" class="btn send_logins_button" value="Send Logins" />
+                <apex:commandButton value="Cancel" action="{!Cancel}" />
+                <apex:commandLink styleClass="rightLinks" value="Show Former Only" action="{!filterByFormer}" reRender="Account_Contacts_List,emailList" oncomplete="pageFunctions();" />
+                <apex:commandLink styleClass="rightLinks" value="Show Active Only" action="{!filterByActive}" reRender="Account_Contacts_List,emailList" oncomplete="pageFunctions();" />
+                <apex:commandLink styleClass="rightLinks" value="Show All" action="{!clearFilters}" reRender="Account_Contacts_List,emailList" oncomplete="pageFunctions();" />
+            </apex:pageBlockButtons>
+            <div style="float:left;">
+					<strong>Status Filter&nbsp;</strong>
+                    <apex:selectList value="{!statusFilterOption}" size="1">
+                    <apex:selectOptions value="{!statusOptions}"></apex:selectOptions>
+                    </apex:selectList>&nbsp;
+					<apex:commandButton value="Filter Results" reRender="Account_Contacts_List,emailList" action="{!filterByStatus}" oncomplete="pageFunctions();" />&nbsp;
+            </div>
+            <label>Change all values</label><apex:inputCheckbox id="affect_all"></apex:inputCheckbox>
+            <br/><br/>
+            <apex:pageBlockTable value="{!Contacts}" var="c" id="Account_Contacts_List">
+              <apex:column headerValue="Contact Manager">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{!sortByContactManager }" reRender="Account_Contacts_List">Contact Manager</apex:commandLink>
+                    </apex:facet>
+                    <apex:outputLink value="{!c.Owner.FirstName}">{!c.Owner.FirstName}</apex:outputLink>
+                </apex:column>            
+                <apex:column headerValue="Subscriber FirstName">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{! sortByFirstName }" reRender="Account_Contacts_List">First Name</apex:commandLink>
+                    </apex:facet>
+                    <apex:outputLink value="/{!c.Id}">{!c.FirstName}</apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Subscriber LastName">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{! sortByLastName }" reRender="Account_Contacts_List">Last Name</apex:commandLink>
+                    </apex:facet>
+                    <apex:outputLink value="/{!c.Id}">{!c.LastName}</apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Contact Status">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{! sortByStatus }" reRender="Account_Contacts_List">Contact Status</apex:commandLink>
+                    </apex:facet>                    
+                    <apex:outputField value="{!c.Status__c}"/>
+                </apex:column>
+                <apex:column headerValue="Email">
+                    <apex:outputField value="{!c.Email}"/>
+                </apex:column> 
+                <apex:column headerValue="Username">
+                    <apex:facet name="header">
+                        <apex:commandLink style="text-decoration: underline;" action="{! sortByUserName }" reRender="Account_Contacts_List">Username</apex:commandLink>
+                    </apex:facet>
+                    <apex:outputField value="{!c.Username__c}"/>
+                </apex:column>  
+                <apex:column headerValue="Password">
+                    <apex:outputField value="{!c.Password__c}"/>
+                </apex:column>
+                <apex:column headerValue="Send Login?">
+                    <input class="send_login" type="checkbox" value="{!CASESAFEID(c.Id)}" />
+                </apex:column> 
+            </apex:pageBlockTable>      
+        </apex:pageBlock>
+    </apex:form>
+<script>
+$( document ).ready(function() {
+    pageFunctions();
+
+    $( ".send_logins_button" ).click(function() {
+        var IdList = [];
+    	$('.send_login:checked').each(function() {
+       		IdList.push($(this).val());
+    	});
+    	sendLogins(IdList);
+    });
+    
+}); 
+
+function pageFunctions(){
+    
+    $( ".send_login" ).change(function() {
+        var affectAll = $('input:checkbox[id$=affect_all]').prop('checked');
+    	var value = $(this).prop('checked');
+        IdList = [];
+        if(affectAll){
+        	$(".send_login").prop('checked', value);
+        }
+    });
+   
+    
+}   
+
+function sendLogins(IdList){
+    //alert('values are: ' + IdList);
+    
+    var theURL = 'https://www.13d.com/force/sendlogin.php?key=7tCG171hx1i2&sfid=' + IdList; 
+    //alert(theURL)
+
+	sforce.connection.remoteFunction({ 
+	url : theURL, 
+	onSuccess : function(response) { 
+	alert("Result: " + response); 
+	} 
+	});
+    
+} 
+</script>    
+</apex:page>
