@@ -2,7 +2,7 @@
     font-family:times new roman,times,serif;
 }
 .p1{
-   padding:0px 10px;
+   padding-left:10px;
 }
 .p2{
    padding:0px 5px;
@@ -63,7 +63,7 @@
 
 <div id="main"><strong><span style="padding-left: 10px; font-size: 18px; margin-top: 10px;">Subscription to 13D Research Service</span></strong>
 
-<p class="p1" style="margin: 0px; border-top-color: black; border-top-width: 2px; border-top-style: solid;"><span class="bold">Subscription Period:&nbsp;</span>{{!Opportunity.subscription_start__c MMMMM d, yyyy}}&nbsp;-&nbsp;{{!Opportunity.Subscription_End__c MMMMM d, yyyy}} <span class="bold" style="float: right;">Total: {{!Opportunity.currencyisocode}}&nbsp;{{!Opportunity.amount #,###.##}}</span></p>
+<p class="p1" style="margin: 0px; border-top-color: black; border-top-width: 2px; border-top-style: solid;"><span class="bold">Subscription Period:&nbsp;</span>{{!Opportunity.subscription_start__c MMMMM d, yyyy}}&nbsp;-&nbsp;{{!Opportunity.Subscription_End__c MMMMM d, yyyy}} <span class="bold" style="float: right;">Total:&nbsp;{{!Opportunity.currencyisocode}}&nbsp;{{!Opportunity.amount #,###.##}}</span></p>
 
 <p class="p1">{{{!Opportunity.Additional_Notes__c}}}</p>
 </div>
